@@ -6,8 +6,8 @@ use libc::{O_RDONLY, O_RDWR, O_WRONLY};
 use std::fs::{File, OpenOptions};
 use std::os::unix::{fs::OpenOptionsExt, io::OwnedFd};
 use std::path::Path;
+use std::process::Command;
 use std::process::ExitCode;
-
 struct Interface;
 
 #[derive(Parser)]
@@ -46,9 +46,9 @@ fn main() -> ExitCode {
             if let input::event::Event::Switch(switch_event) = event {
                 if let Toggle(toggle_event) = switch_event {
                     if toggle_event.switch_state() == SwitchState::On {
-                        println!("Toggling to ON");
+                        Command::new("./change_mode.sh").arg("T").spawn().expect("");
                     } else {
-                        println!("Toggling to OFF");
+                        Command::new("./change_mode.sh").arg("L").spawn().expect("");
                     }
                 } else {
                     println!("Switch SubType is not supported");
@@ -58,5 +58,4 @@ fn main() -> ExitCode {
             }
         }
     }
-    return ExitCode::from(42);
 }
